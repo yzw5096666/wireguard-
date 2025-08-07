@@ -1,0 +1,41 @@
+
+脚本使用的是iptables做nat
+
+1上传到wg.sh到root目录
+
+2搭建
+apt update && apt install -y iptables-persistent
+chmod +x wg.sh
+sudo bash wg.sh
+
+
+3服务器重启后自动开启wireguard端口
+创建服务文件
+sudo nano /etc/systemd/system/wg-autostart.service
+
+把下面内容粘贴进去，保存退出（Ctrl+O, 回车，Ctrl+X）
+
+[Unit]
+Description=Auto start all WireGuard wg*.conf instances
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'for conf in /etc/wireguard/wg*.conf; do [ -f "$conf" ] && wg-quick up "$(basename "$conf" .conf)"; done'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
+
+启用服务（设置为开机自启）
+sudo systemctl enable wg-autostart.service
+
+管理
+sudo bash wg.sh
+
+v2raya一定要关闭再增加用户再重启，这一点openvpn和wireguard会写错配置的ip，ikev2则不会但都建议先关闭
+
+
+
