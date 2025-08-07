@@ -35,7 +35,17 @@ sudo systemctl enable wg-autostart.service
 管理
 sudo bash wg.sh
 
-v2raya一定要关闭再增加用户再重启，这一点openvpn和wireguard会写错配置的ip，ikev2则不会但都建议先关闭
+以上可以实现多端口，每个端口多用户
+
+
+其他：
+做这个目的是为了配合linux的v2raya进行准确分流以及手机游戏加速。
+因为专线ss可以用来打电脑游戏，配合netch，但是手机测试许多游戏只能在大厅，无法进入对局，chatgpt说shadowrocket等并非真vpn，只是用api实现系统级别流量管理，真正底层还是openvpn，ikev2，wireguard等。所以把ss转成wireguard就可以正常全游戏支持。考虑到singbox。vpn配合v2等几乎可以实现任意协议转换，故需要辨别是否真专线ss，ss明确过不了gfw，所以一是专线，而是国内ss入口，转换其他协议入trojan，reality出，这就是假ss，普通中转并且套了tls延迟增加完全不能游戏。这也有用，比如客户端需要ss，socks5甚至不需要客户端，也可以用于spotify插件。wireguard仅增加轻微性能消耗，延迟影响几乎忽略，可以电脑虚拟机vmware安装轻量linux，搭建转换，给局域网任意设备使用。可以购买国内公网服务器使用。
+配合v2raya可以实现一个入端口对应一个或者多个节点，这样手机也可以有多个方向加速器，亲测效果很好，延迟不是很低但是比较稳定。
+如果只是一个端口，很难配合rountinga分流，基本只能域名分流，这样根据源ip分流。
+总之几乎可以实现任意出口协议转换任意协议+vpn入口，十分方便。
+v2raya一定要关闭wireguard再增加用户再重启，这一点开启时openvpn和wireguard会写错配置的ip变成出口节点的，ikev2则不会但都建议先关闭程序。
+
 
 
 
